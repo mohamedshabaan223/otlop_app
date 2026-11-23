@@ -1,151 +1,90 @@
-// import 'dart:developer';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:otlop_app/core/app_style.dart';
+import 'package:otlop_app/core/colors_manger.dart';
+import 'package:otlop_app/feature/home/presentation/widgets/container_filter.dart';
+import 'package:otlop_app/feature/home/presentation/widgets/filter_search.dart';
+import 'package:otlop_app/feature/home/presentation/widgets/header_filters.dart';
+import 'package:otlop_app/feature/home/presentation/widgets/home_get_product.dart';
 
-// import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:otlop_app/core/app_style.dart';
-// import 'package:otlop_app/core/colors_manger.dart';
-// import 'package:otlop_app/core/route/route_constant.dart';
-// import 'package:otlop_app/feature/home/data/data_source/remote/home_remote_data_source.dart';
-// import 'package:otlop_app/feature/home/presentation/widgets/category_card_info.dart';
-// import 'package:otlop_app/feature/home/presentation/widgets/container_filter.dart';
-// import 'package:otlop_app/feature/home/presentation/widgets/filter_search.dart';
-// import 'package:otlop_app/feature/home/presentation/widgets/header_filters.dart';
+class FilterProductScreen extends StatelessWidget {
+  FilterProductScreen({super.key, this.name, this.catId, this.brandId});
+  final String? name;
+  final int? catId, brandId;
 
-// class FilterCategoryScreen extends StatefulWidget {
-//   const FilterCategoryScreen({super.key, this.name, this.id});
-//   final String? name;
-//   final int? id;
+  List<String> labels = ['Relevance', 'Price ↑', 'Price ↓', 'A – Z'];
 
-//   @override
-//   State<FilterCategoryScreen> createState() => _FilterCategoryScreenState();
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0.w),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 30.h),
+                HeaderFilters(label: name ?? ''),
+                SizedBox(height: 12.h),
+                FilterSearch(hintText: 'Search products...'),
+                SizedBox(height: 12.h),
+                SizedBox(
+                  height: 40.h,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      InkWell(
+                        onTap: () {},
+                        child: ContainerFilter(
+                          label: 'Relevance',
+                          containerColor: ColorsManger.primaryColor,
 
-// class _FilterCategoryScreenState extends State<FilterCategoryScreen> {
-//   List<String> labels = ['Relevance', 'Price ↑', 'Price ↓', 'A – Z'];
-//   List<dynamic> category = [];
-//   HomeRemoteDataSource homeRemoteDataSource = HomeRemoteDataSource();
-//   bool isLoading = true;
+                          labelColor: ColorsManger.white,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {},
+                        child: ContainerFilter(
+                          label: 'Price ↑',
+                          containerColor: ColorsManger.white,
+                          labelColor: ColorsManger.black,
+                        ),
+                      ),
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     homeRemoteDataSource
-//         .filterCategory(categoryId: widget.id ?? 0)
-//         .then(
-//           ((value) {
-//             isLoading = false;
-//             category = value;
-//             setState(() {});
-//           }),
-//           onError: (e) {
-//             isLoading = false;
-
-//             log(e.toString());
-//           },
-//         );
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//
-//       body: SafeArea(
-//         child: Padding(
-//           padding: EdgeInsets.symmetric(horizontal: 16.0.w),
-//           child: SingleChildScrollView(
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 SizedBox(height: 30.h),
-//                 HeaderFilters(label: widget.name ?? ''),
-//                 SizedBox(height: 12.h),
-//                 FilterSearch(hintText: 'Search products...'),
-//                 SizedBox(height: 12.h),
-//                 SizedBox(
-//                   height: 40.h,
-//                   child: ListView(
-//                     scrollDirection: Axis.horizontal,
-//                     children: [
-//                       InkWell(
-//                         onTap: () {},
-//                         child: ContainerFilter(
-//                           label: 'Relevance',
-//                           containerColor: ColorsManger.primaryColor,
-
-//                           labelColor: ColorsManger.white,
-//                         ),
-//                       ),
-//                       InkWell(
-//                         onTap: () {},
-//                         child: ContainerFilter(
-//                           label: 'Price ↑',
-//                           containerColor: ColorsManger.white,
-//                           labelColor: ColorsManger.black,
-//                         ),
-//                       ),
-
-//                       InkWell(
-//                         onTap: () {},
-//                         child: ContainerFilter(
-//                           label: 'Price ↓',
-//                           containerColor: ColorsManger.white,
-//                           labelColor: ColorsManger.black,
-//                         ),
-//                       ),
-//                       InkWell(
-//                         onTap: () {},
-//                         child: ContainerFilter(
-//                           label: 'A – Z',
-//                           containerColor: ColorsManger.white,
-//                           labelColor: ColorsManger.black,
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//                 SizedBox(height: 12.h),
-//                 Text(
-//                   '${category.length.toString()} items',
-//                   style: AppStyle.text12Semibold.copyWith(
-//                     color: Color(0xff9CA3AF),
-//                   ),
-//                 ),
-//                 SizedBox(height: 16.h),
-//                 isLoading
-//                     ? Center(child: CircularProgressIndicator())
-//                     : category.isEmpty
-//                     ? Text('no founded')
-//                     : GridView.builder(
-//                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//                           crossAxisCount: 2,
-//                           childAspectRatio: 0.55,
-//                           mainAxisSpacing: 10.h,
-//                           crossAxisSpacing: 10.w,
-//                         ),
-//                         physics: NeverScrollableScrollPhysics(),
-//                         shrinkWrap: true,
-//                         itemCount: category.length,
-//                         itemBuilder: (context, index) => InkWell(
-//                           onTap: () {
-//                             Navigator.pushNamed(
-//                               context,
-//                               RouteConstant.categoryDetailsScreen,
-//                             );
-//                           },
-//                           child: CategoryCardInfo(
-//                             name: category[index]['name'],
-//                             brand: category[index]['brand'],
-//                             category: category[index]['category'],
-//                             price: category[index]['price'].toString(),
-//                             image: category[index]['pictureUrl'],
-//                           ),
-//                         ),
-//                       ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+                      InkWell(
+                        onTap: () {},
+                        child: ContainerFilter(
+                          label: 'Price ↓',
+                          containerColor: ColorsManger.white,
+                          labelColor: ColorsManger.black,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {},
+                        child: ContainerFilter(
+                          label: 'A – Z',
+                          containerColor: ColorsManger.white,
+                          labelColor: ColorsManger.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                Text(
+                  '2items',
+                  style: AppStyle.text12Semibold.copyWith(
+                    color: Color(0xff9CA3AF),
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                HomeGetProduct(catId: catId ?? null, brandId:  brandId ?? null, ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
